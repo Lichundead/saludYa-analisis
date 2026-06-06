@@ -88,8 +88,8 @@
 
     <script>
         const USERS = [
-            { email: 'paciente@demo.com', password: '123456', dest: '../paciente/index.html' },
-            { email: 'medico@demo.com',   password: '123456', dest: '../medico/index.html'   },
+            { email: 'paciente@demo.com', password: '123456', dest: '../paciente/index.html', name: 'Carlos López' },
+            { email: 'medico@demo.com',   password: '123456', dest: '../medico/index.html',   name: 'Dra. Paula García' },
         ];
 
         function togglePassword() {
@@ -105,6 +105,7 @@
 
             if (user) {
                 sessionStorage.setItem('saludya_sesion', 'activa');
+                sessionStorage.setItem('saludya_nombre', user.name);
                 document.getElementById('error-msg').style.display = 'none';
                 window.location.href = user.dest;
             } else {

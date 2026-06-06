@@ -15,40 +15,40 @@
 
     <div class="form-grid">
       <div class="form-group">
-        <label class="form-label" for="especialidad">Especialidad</label>
+        <label class="form-label">Especialidad</label>
         <div class="select-wrapper">
-          <select id="especialidad" class="form-select" disabled>
-            <option selected>Medicina general</option>
+          <select id="val-especialidad" class="form-select" disabled>
+            <option selected>—</option>
           </select>
           <i data-lucide="chevron-down" class="select-arrow"></i>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="medico">Médico</label>
+        <label class="form-label">Médico</label>
         <div class="select-wrapper">
-          <select id="medico" class="form-select" disabled>
-            <option selected>Paula Garcia</option>
+          <select id="val-medico" class="form-select" disabled>
+            <option selected>—</option>
           </select>
           <i data-lucide="chevron-down" class="select-arrow"></i>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="fecha">Fecha</label>
+        <label class="form-label">Fecha</label>
         <div class="select-wrapper">
-          <select id="fecha" class="form-select" disabled>
-            <option selected>01/06/2026</option>
+          <select id="val-fecha" class="form-select" disabled>
+            <option selected>—</option>
           </select>
           <i data-lucide="chevron-down" class="select-arrow"></i>
         </div>
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="hora">Hora</label>
+        <label class="form-label">Hora</label>
         <div class="select-wrapper">
-          <select id="hora" class="form-select" disabled>
-            <option selected>10:30 am - 10:50am</option>
+          <select id="val-hora" class="form-select" disabled>
+            <option selected>—</option>
           </select>
           <i data-lucide="chevron-down" class="select-arrow"></i>
         </div>
@@ -56,11 +56,7 @@
     </div>
 
     <div class="confirmation-box">
-      <p class="confirmation-text">
-        Su cita ha sido agendada para el día <strong>01/06/2026</strong> a las <strong>10:30am</strong>
-        en la especialidad de <strong>Medicina General</strong> con el profesional <strong>Paula Garcia</strong>.
-        Recuerde asistir con una antelación de 15 min o, si no puede asistir, cancele su cita con 12 horas de antelación.
-      </p>
+      <p class="confirmation-text" id="conf-text"></p>
     </div>
 
     <a href="../index.html">
@@ -69,6 +65,24 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+
+    const cita = JSON.parse(sessionStorage.getItem('saludya_cita_pendiente') || 'null');
+    if (cita) {
+      const [y, m, d] = cita.fecha.split('-');
+      const fechaFmt  = `${d}/${m}/${y}`;
+
+      document.querySelector('#val-especialidad option').textContent = cita.especialidad;
+      document.querySelector('#val-medico option').textContent       = cita.medico;
+      document.querySelector('#val-fecha option').textContent        = fechaFmt;
+      document.querySelector('#val-hora option').textContent         = cita.hora;
+
+      document.getElementById('conf-text').innerHTML =
+        `Su cita ha sido agendada para el día <strong>${fechaFmt}</strong> a las <strong>${cita.hora}</strong>
+         en la especialidad de <strong>${cita.especialidad}</strong> con el profesional <strong>${cita.medico}</strong>.
+         Recuerde asistir con una antelación de 15 min o, si no puede asistir, cancele su cita con 12 horas de antelación.`;
+    }
+  </script>
 </body>
 </html>

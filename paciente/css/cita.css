@@ -186,3 +186,35 @@ input[type="date"].form__select::placeholder {
 input[type="text"].form__select::placeholder {
   color: var(--color-text-muted);
 }
+
+.form__full {
+  margin-bottom: 16px;
+}
+
+.form__textarea {
+  width: 100%;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--color-text);
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  min-height: 72px;
+}
+.form__textarea:focus {
+  border-color: var(--color-primary);
+}
+.form__textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form__error {
+  color: #dc2626;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+}

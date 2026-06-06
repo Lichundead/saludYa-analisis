@@ -60,18 +60,62 @@
           </div>
         </div>
       </div>
+      <p class="form__error" id="form-error" style="display:none;">Completa todos los campos requeridos.</p>
+
       <div class="form__actions">
         <a href="../index.html">
           <button type="button" class="btn btn--secondary">Cancelar</button>
         </a>
-        <a href="confirmacion-cita.html">
-          <button type="button" class="btn btn--primary">Confirmar</button>
-        </a>
+        <button type="button" class="btn btn--primary" onclick="confirmarCita()">Confirmar</button>
       </div>
     </form>
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script>lucide.createIcons();</script>
+  <script>
+    lucide.createIcons();
+
+    const MEDICO_MAP = {
+      'dr-paula-garcia': 'Dra. Paula García',
+      'dra-lopez':       'Dra. López'
+    };
+    const ESP_MAP = {
+      'medicina_general': 'Medicina General',
+      'dermatologia':     'Dermatología',
+      'pediatria':        'Pediatría'
+    };
+
+    function confirmarCita() {
+      const esp    = document.getElementById('especialidad').value;
+      const med    = document.getElementById('medico').value;
+      const fecha  = document.getElementById('fecha').value;
+      const hora   = document.getElementById('hora').value;
+      const errEl  = document.getElementById('form-error');
+
+      if (!esp || !med || !fecha || !hora) {
+        errEl.style.display = 'block';
+        return;
+      }
+      errEl.style.display = 'none';
+
+      const cita = {
+        id:           'cita_' + Date.now(),
+        paciente:     sessionStorage.getItem('saludya_nombre') || 'Paciente Demo',
+        medico:       MEDICO_MAP[med],
+        especialidad: ESP_MAP[esp],
+        fecha,
+        hora,
+        estado:       'pendiente',
+        motivo:       ''
+      };
+
+      const citas = JSON.parse(localStorage.getItem('saludya_citas') || '[]');
+      citas.push(cita);
+      localStorage.setItem('saludya_citas', JSON.stringify(citas));
+
+      sessionStorage.setItem('saludya_cita_pendiente', JSON.stringify(cita));
+      window.location.href = 'confirmacion-cita.html';
+    }
+  </script>
 </body>
 </html>
