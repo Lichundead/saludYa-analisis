@@ -1,0 +1,407 @@
+/* ── Stats row ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+.stat-card {
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-card--blue {
+  background: #eff6ff;
+}
+.stat-card--amber {
+  background: #fffbeb;
+}
+.stat-card--green {
+  background: #f0fdf4;
+}
+
+.stat-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stat-card__icon i {
+  width: 22px;
+  height: 22px;
+}
+
+.stat-card--blue .stat-card__icon {
+  background: #dbeafe;
+  color: var(--color-primary);
+}
+.stat-card--amber .stat-card__icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+.stat-card--green .stat-card__icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.stat-card__value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.stat-card--blue .stat-card__value {
+  color: var(--color-primary);
+}
+.stat-card--amber .stat-card__value {
+  color: #d97706;
+}
+.stat-card--green .stat-card__value {
+  color: #16a34a;
+}
+
+.stat-card__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* ── Content grid (2 cols) ── */
+.medico-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+}
+
+/* ── Solicitudes (pending requests) ── */
+.solicitudes {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.solicitudes h3,
+.agenda-hoy h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.solicitud-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.solicitud-card:last-child {
+  margin-bottom: 0;
+}
+
+.solicitud-card__nombre {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.solicitud-card__info {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 4px;
+}
+
+.solicitud-card__motivo {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.solicitud-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-confirm,
+.btn-reject {
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  border: none;
+}
+
+.btn-confirm {
+  background: #16a34a;
+  color: var(--color-white);
+}
+.btn-confirm:hover {
+  background: #15803d;
+}
+
+.btn-reject {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}
+.btn-reject:hover {
+  background: rgba(220, 38, 38, 0.07);
+}
+
+/* ── Agenda del día ── */
+.agenda-hoy {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.agenda-item:last-child {
+  border-bottom: none;
+}
+
+.agenda-item__time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+  width: 44px;
+  flex-shrink: 0;
+}
+
+.agenda-item__name {
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.agenda-item__esp {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* ── Gestión de Citas: vista calendario ── */
+.citas-calendario {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.citas-cal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.citas-cal__header h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.citas-cal__body {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Nav mes */
+.citas-cal__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.citas-cal__mes-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Etiquetas de día */
+.citas-cal__grid-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 4px;
+}
+.citas-cal__label {
+  text-align: center;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  padding: 2px 0;
+}
+
+/* Grid de días */
+.citas-cal__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+  padding: 3px 2px;
+}
+.cal-day:hover:not(.cal-day--empty) {
+  background: #f3f4f6;
+}
+.cal-day--empty {
+  cursor: default;
+}
+.cal-day--today {
+  background: #f3f4f6;
+}
+.cal-day--today .cal-day__num {
+  font-weight: 700;
+}
+.cal-day--selected {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary);
+}
+.cal-day--selected .cal-day__num {
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.cal-day__num {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Puntos de estado */
+.cal-day__dots {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cal-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cal-dot--confirmed {
+  background: #16a34a;
+}
+.cal-dot--pending {
+  background: #d97706;
+}
+.cal-dot--cancelled {
+  background: #9ca3af;
+}
+.cal-dot--rejected {
+  background: #dc2626;
+}
+.cal-day--selected .cal-dot {
+  opacity: 0.85;
+}
+
+.cal-dot__more {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  line-height: 5px;
+}
+
+/* Panel derecho: detalle del día */
+.citas-cal__right {
+  border-left: 1px solid var(--color-border);
+  padding-left: 24px;
+  min-height: 320px;
+}
+
+.citas-cal__detail-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.citas-cal__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 240px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+.citas-cal__placeholder i {
+  width: 36px;
+  height: 36px;
+  opacity: 0.35;
+}
+
+/* Filas de citas en el panel derecho */
+.medico-cita-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+}
+.medico-cita-row:last-child {
+  margin-bottom: 0;
+}
+.medico-cita-row__patient {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.medico-cita-row__details {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.medico-cita-row__motivo {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+  font-style: italic;
+}
+.medico-cita-row__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.medico-cita-row__action-row {
+  display: flex;
+  gap: 6px;
+}

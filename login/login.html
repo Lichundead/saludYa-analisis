@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaludYa - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+
+            <!-- LOGO -->
+            <div class="logo">
+                <i class="fa-solid fa-stethoscope"></i>
+            </div>
+
+            <!-- TITULO -->
+            <h1>Bienvenido</h1>
+            <p class="subtitle">SaludYa</p>
+
+            <!-- CREDENCIALES DEMO -->
+            <div class="demo-hint">
+                <span><i class="fa-solid fa-user"></i> paciente@demo.com</span>
+                <span><i class="fa-solid fa-user-doctor"></i> medico@demo.com</span>
+                <span>Contraseña: 123456</span>
+            </div>
+
+            <!-- ERROR -->
+            <div class="error-msg" id="error-msg">
+                Credenciales incorrectas. Verifica tu correo y contraseña.
+            </div>
+
+            <!-- FORMULARIO -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+
+                <!-- EMAIL -->
+                <label>Correo electrónico</label>
+                <div class="input-group">
+                    <i class="fa-regular fa-envelope"></i>
+                    <input
+                        id="email-input"
+                        type="email"
+                        placeholder="correo@ejemplo.com"
+                        required
+                    >
+                </div>
+
+                <!-- PASSWORD -->
+                <label>Contraseña</label>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input
+                        id="password-input"
+                        type="password"
+                        placeholder="Contraseña"
+                        required
+                    >
+                    <i class="fa-solid fa-eye-slash" style="cursor:pointer" onclick="togglePassword()"></i>
+                </div>
+
+                <!-- OPCIONES -->
+                <div class="options">
+                    <div class="remember">
+                        <input type="checkbox">
+                        <span>Recuérdame</span>
+                    </div>
+                    <a href="forgot-password.html">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- BOTON -->
+                <button type="submit">Iniciar sesión</button>
+
+            </form>
+
+            <!-- REGISTRO -->
+            <p class="register">
+                ¿No tienes cuenta?
+                <a href="register.html">Regístrate aquí</a>
+            </p>
+
+        </div>
+    </div>
+
+    <script>
+        const USERS = [
+            { email: 'paciente@demo.com', password: '123456', dest: '../paciente/index.html' },
+            { email: 'medico@demo.com',   password: '123456', dest: '../medico/index.html'   },
+        ];
+
+        function togglePassword() {
+            const inp = document.getElementById('password-input');
+            inp.type = inp.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email    = document.getElementById('email-input').value.trim().toLowerCase();
+            const password = document.getElementById('password-input').value;
+            const user     = USERS.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                sessionStorage.setItem('saludya_sesion', 'activa');
+                document.getElementById('error-msg').style.display = 'none';
+                window.location.href = user.dest;
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

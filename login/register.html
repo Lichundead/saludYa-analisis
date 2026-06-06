@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaludYa - Registro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+
+      <div class="logo">
+        <i class="fa-solid fa-stethoscope"></i>
+      </div>
+
+      <h1>Crear cuenta</h1>
+      <p class="subtitle">Únete al sistema de gestión de citas</p>
+
+      <form action="../paciente/index.html">
+        <div class="grid">
+
+          <div>
+            <label>Nombre completo</label>
+            <div class="input-group">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" placeholder="Juan Pérez" required>
+            </div>
+          </div>
+
+          <div>
+            <label>Correo electrónico</label>
+            <div class="input-group">
+              <i class="fa-regular fa-envelope"></i>
+              <input type="email" placeholder="correo@ejemplo.com" required>
+            </div>
+          </div>
+
+          <div>
+            <label>Número de teléfono</label>
+            <div class="input-group">
+              <input type="text" placeholder="+57 123 456 7890" required>
+            </div>
+          </div>
+
+          <div>
+            <label>RH</label>
+            <div class="input-group">
+              <select required>
+                <option value="">Seleccionar</option>
+                <option>O+</option>
+                <option>O-</option>
+                <option>A+</option>
+                <option>A-</option>
+                <option>B+</option>
+                <option>AB+</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label>Tipo de identificación</label>
+            <div class="input-group">
+              <select required>
+                <option value="">Seleccionar</option>
+                <option>CC</option>
+                <option>TI</option>
+                <option>CE</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label>Número de identificación</label>
+            <div class="input-group">
+              <input type="text" placeholder="123456789" required>
+            </div>
+          </div>
+
+          <div>
+            <label>Contraseña</label>
+            <div class="input-group">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" placeholder="********" required>
+              <i class="fa-solid fa-eye-slash"></i>
+            </div>
+          </div>
+
+          <div>
+            <label>Confirmar contraseña</label>
+            <div class="input-group">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" placeholder="********" required>
+              <i class="fa-solid fa-eye-slash"></i>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" required>
+          <span>Acepto los términos y condiciones de la política y privacidad</span>
+        </div>
+
+        <button type="submit">Crear cuenta</button>
+      </form>
+
+      <p class="register">
+        ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+      </p>
+
+    </div>
+  </div>
+</body>
+</html>

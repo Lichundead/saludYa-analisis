@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #d4d4d4;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background-color: #f5f7f9;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 520px;
+  padding: 32px 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card__icon {
+  width: 48px;
+  height: 48px;
+  background-color: #2563eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.card__icon i {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+.card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 32px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 32px 10px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #111827;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.confirmation-box {
+  background-color: #86efac;
+  border-radius: 8px;
+  padding: 14px 18px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.confirmation-text {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #064e3b;
+  text-align: center;
+}
+
+.confirmation-text strong {
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}

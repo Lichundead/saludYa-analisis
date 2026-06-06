@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Agenda - SaludYa</title>
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/gestion-agenda.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">
+          <i data-lucide="stethoscope"></i>
+        </div>
+        <div class="sidebar__title">
+          <h1>SaludYa</h1>
+          <span>Panel médico</span>
+        </div>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="../index.html" class="sidebar__link">
+          <i data-lucide="home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="../index.html" class="sidebar__link"
+           onclick="event.preventDefault(); window.location.href='../index.html';">
+          <i data-lucide="calendar-check"></i>
+          <span>Gestión de Citas</span>
+        </a>
+        <a href="gestion-agenda.html" class="sidebar__link sidebar__link--active">
+          <i data-lucide="clock"></i>
+          <span>Gestión de Agenda</span>
+        </a>
+        <a href="#" class="sidebar__link">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header__top">
+          <div class="header__info">
+            <h2>Gestión de Agenda</h2>
+            <p id="header-date"></p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button class="btn-primary" style="background:#6b7280;" onclick="window.location='../index.html'">
+              <i data-lucide="arrow-left"></i>
+              <span>Volver al panel</span>
+            </button>
+            <button class="header__logout" onclick="window.location='../../login/login.html'">
+              <i data-lucide="log-out"></i>
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="agenda-layout">
+        <!-- ── Add slot form ── -->
+        <div class="add-slot-card">
+          <h3>Agregar disponibilidad</h3>
+          <form class="slot-form" onsubmit="return false;">
+            <div class="slot-form__field">
+              <label class="slot-form__label" for="slot-fecha">Fecha</label>
+              <input type="date" id="slot-fecha" class="slot-form__input" required />
+            </div>
+
+            <div class="slot-form__row">
+              <div class="slot-form__field">
+                <label class="slot-form__label" for="slot-inicio">Hora inicio</label>
+                <input type="time" id="slot-inicio" class="slot-form__input" required />
+              </div>
+              <div class="slot-form__field">
+                <label class="slot-form__label" for="slot-fin">Hora fin</label>
+                <input type="time" id="slot-fin" class="slot-form__input" required />
+              </div>
+            </div>
+
+            <p id="form-slot-error"></p>
+
+            <button type="button" class="btn-add-slot" onclick="agregarFranja()">
+              <i data-lucide="plus"></i> Agregar franja
+            </button>
+          </form>
+        </div>
+
+        <!-- ── Slots list ── -->
+        <div class="slots-card">
+          <div class="slots-card__header">
+            <h3>Franjas disponibles</h3>
+            <div class="slots-filter-tabs filter-tabs">
+              <button class="filter-tab filter-tab--active" data-filter="todas"
+                      onclick="setSlotFilter('todas')">Todas</button>
+              <button class="filter-tab" data-filter="disponible"
+                      onclick="setSlotFilter('disponible')">Libres</button>
+              <button class="filter-tab" data-filter="reservada"
+                      onclick="setSlotFilter('reservada')">Reservadas</button>
+            </div>
+          </div>
+          <div id="slots-list"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    /* ═══ Config ═══ */
+    const AGENDA_KEY    = 'saludya_agenda';
+    const CITAS_KEY     = 'saludya_citas';
+    const MEDICO_ACTUAL = 'Dra. Paula García';
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+    /* ═══ Storage ═══ */
+    function getAgenda() {
+      return JSON.parse(localStorage.getItem(AGENDA_KEY) || '[]');
+    }
+    function saveAgenda(data) {
+      localStorage.setItem(AGENDA_KEY, JSON.stringify(data));
+    }
+    function getCitas() {
+      return JSON.parse(localStorage.getItem(CITAS_KEY) || '[]');
+    }
+
+    /* ═══ Seed agenda (if empty) ═══ */
+    function initSeed() {
+      if (getAgenda().length > 0) return;
+      saveAgenda([
+        { id: 'slot_s1', medico: MEDICO_ACTUAL, fecha: '2026-06-10', horaInicio: '08:00', horaFin: '08:30' },
+        { id: 'slot_s2', medico: MEDICO_ACTUAL, fecha: '2026-06-10', horaInicio: '08:30', horaFin: '09:00' },
+        { id: 'slot_s3', medico: MEDICO_ACTUAL, fecha: '2026-06-15', horaInicio: '10:30', horaFin: '11:00' },
+        { id: 'slot_s4', medico: MEDICO_ACTUAL, fecha: '2026-06-22', horaInicio: '09:00', horaFin: '09:30' },
+        { id: 'slot_s5', medico: MEDICO_ACTUAL, fecha: '2026-06-04', horaInicio: '08:00', horaFin: '08:30' },
+        { id: 'slot_s6', medico: MEDICO_ACTUAL, fecha: '2026-06-04', horaInicio: '09:00', horaFin: '09:30' },
+      ]);
+    }
+
+    /* ═══ Helpers ═══ */
+    function isReservada(slot) {
+      return getCitas().some(c =>
+        c.medico === slot.medico &&
+        c.fecha  === slot.fecha  &&
+        c.hora   === slot.horaInicio &&
+        (c.estado === 'pendiente' || c.estado === 'confirmada')
+      );
+    }
+
+    function fmtFecha(fecha) {
+      const d = new Date(fecha + 'T00:00:00');
+      return `${String(d.getDate()).padStart(2,'0')} ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    /* ═══ Add slot ═══ */
+    function agregarFranja() {
+      const fecha   = document.getElementById('slot-fecha').value;
+      const inicio  = document.getElementById('slot-inicio').value;
+      const fin     = document.getElementById('slot-fin').value;
+      const errEl   = document.getElementById('form-slot-error');
+
+      if (!fecha || !inicio || !fin) {
+        errEl.textContent = 'Completa todos los campos.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (inicio >= fin) {
+        errEl.textContent = 'La hora de inicio debe ser anterior a la hora de fin.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const hoy = new Date(); hoy.setHours(0,0,0,0);
+      if (new Date(fecha + 'T00:00:00') < hoy) {
+        errEl.textContent = 'No se puede agregar disponibilidad en fechas pasadas.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      /* Duplicate check */
+      const existe = getAgenda().some(s =>
+        s.medico === MEDICO_ACTUAL && s.fecha === fecha &&
+        s.horaInicio === inicio && s.horaFin === fin
+      );
+      if (existe) {
+        errEl.textContent = 'Ya existe una franja con esa fecha y horario.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      errEl.style.display = 'none';
+
+      const agenda = getAgenda();
+      agenda.push({
+        id:         'slot_' + Date.now(),
+        medico:     MEDICO_ACTUAL,
+        fecha,
+        horaInicio: inicio,
+        horaFin:    fin,
+      });
+      saveAgenda(agenda);
+
+      /* Clear form */
+      document.getElementById('slot-fecha').value  = '';
+      document.getElementById('slot-inicio').value = '';
+      document.getElementById('slot-fin').value    = '';
+
+      renderSlots();
+    }
+
+    /* ═══ Remove slot ═══ */
+    function eliminarFranja(id) {
+      const slot = getAgenda().find(s => s.id === id);
+      if (!slot) return;
+      if (isReservada(slot)) {
+        alert('Esta franja tiene citas activas y no puede eliminarse.');
+        return;
+      }
+      if (!confirm('¿Eliminar esta franja de disponibilidad?')) return;
+      saveAgenda(getAgenda().filter(s => s.id !== id));
+      renderSlots();
+    }
+
+    /* ═══ Render slots ═══ */
+    let slotFiltro = 'todas';
+
+    function setSlotFilter(f) {
+      slotFiltro = f;
+      document.querySelectorAll('.filter-tab').forEach(t =>
+        t.classList.toggle('filter-tab--active', t.dataset.filter === f)
+      );
+      renderSlots();
+    }
+
+    function renderSlots() {
+      let slots = getAgenda().filter(s => s.medico === MEDICO_ACTUAL);
+
+      if (slotFiltro === 'disponible') slots = slots.filter(s => !isReservada(s));
+      if (slotFiltro === 'reservada')  slots = slots.filter(s =>  isReservada(s));
+
+      slots.sort((a,b) => (a.fecha + a.horaInicio).localeCompare(b.fecha + b.horaInicio));
+
+      const el = document.getElementById('slots-list');
+      if (!slots.length) {
+        el.innerHTML = '<p class="empty-state">No hay franjas en esta categoría</p>';
+        lucide.createIcons();
+        return;
+      }
+
+      el.innerHTML = slots.map(s => {
+        const reservada = isReservada(s);
+        return `
+          <div class="slot-item">
+            <div>
+              <div class="slot-item__date">${fmtFecha(s.fecha)}</div>
+              <div class="slot-item__time">${s.horaInicio} – ${s.horaFin}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="slot-badge ${reservada ? 'slot-badge--booked' : 'slot-badge--available'}">
+                ${reservada ? 'Reservada' : 'Disponible'}
+              </span>
+              ${!reservada
+                ? `<button class="btn-remove-slot" onclick="eliminarFranja('${s.id}')">
+                     <i data-lucide="trash-2"></i> Eliminar
+                   </button>`
+                : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    /* ═══ Date header ═══ */
+    function setHeaderDate() {
+      const diasES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+      const n = new Date();
+      document.getElementById('header-date').textContent =
+        `${diasES[n.getDay()].charAt(0).toUpperCase() + diasES[n.getDay()].slice(1)}, ${n.getDate()} de ${MESES[n.getMonth()].toLowerCase()} del ${n.getFullYear()} · Dra. Paula García`;
+    }
+
+    /* ═══ Bootstrap ═══ */
+    initSeed();
+    setHeaderDate();
+    renderSlots();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

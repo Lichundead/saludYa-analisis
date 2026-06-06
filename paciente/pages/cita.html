@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaludYa - Agendar cita</title>
+  <link rel="stylesheet" href="../css/cita.css">
+</head>
+<body>
+  <div class="card">
+    <div class="card__icon">
+      <i data-lucide="stethoscope"></i>
+    </div>
+    <h1 class="card__title">Agendar nueva cita</h1>
+    <form class="form">
+      <div class="form__row">
+        <div class="form__field">
+          <label class="form__label" for="especialidad">Especialidad</label>
+          <div class="form__select-wrapper">
+            <select id="especialidad" class="form__select">
+              <option value="" disabled selected>Seleccionar especialidad</option>
+              <option value="medicina_general">Medicina General</option>
+              <option value="dermatologia">Dermatología</option>
+              <option value="pediatria">Pediatría</option>
+            </select>
+            <i data-lucide="chevron-down" class="form__select-icon"></i>
+          </div>
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="medico">Médico</label>
+          <div class="form__select-wrapper">
+            <select id="medico" class="form__select">
+              <option value="" disabled selected>Seleccionar médico</option>
+              <option value="dr-paula-garcia">Dra. Paula García</option>
+              <option value="dra-lopez">Dra. López</option>
+            </select>
+            <i data-lucide="chevron-down" class="form__select-icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="form__row">
+        <div class="form__field">
+          <label class="form__label" for="fecha">Fecha</label>
+          <div class="form__select-wrapper">
+            <input type="text" id="fecha" class="form__select" placeholder="dd/mm/aaaa"
+                   onfocus="(this.type='date')" onblur="if(!this.value)this.type='text'">
+            <i data-lucide="chevron-down" class="form__select-icon"></i>
+          </div>
+        </div>
+        <div class="form__field">
+          <label class="form__label" for="hora">Hora</label>
+          <div class="form__select-wrapper">
+            <select id="hora" class="form__select">
+              <option value="" disabled selected>Seleccionar hora</option>
+              <option value="09:30">09:30</option>
+              <option value="10:30">10:30</option>
+              <option value="11:00">11:00</option>
+            </select>
+            <i data-lucide="chevron-down" class="form__select-icon"></i>
+          </div>
+        </div>
+      </div>
+      <div class="form__actions">
+        <a href="../index.html">
+          <button type="button" class="btn btn--secondary">Cancelar</button>
+        </a>
+        <a href="confirmacion-cita.html">
+          <button type="button" class="btn btn--primary">Confirmar</button>
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

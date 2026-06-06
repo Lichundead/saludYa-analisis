@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SaludYa - Panel Médico</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar__brand">
+        <div class="sidebar__logo">
+          <i data-lucide="stethoscope"></i>
+        </div>
+        <div class="sidebar__title">
+          <h1>SaludYa</h1>
+          <span>Panel médico</span>
+        </div>
+      </div>
+      <nav class="sidebar__nav">
+        <a href="#" class="sidebar__link sidebar__link--active" id="nav-inicio"
+           onclick="showView('inicio'); return false;">
+          <i data-lucide="home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="sidebar__link" id="nav-citas"
+           onclick="showView('citas'); return false;">
+          <i data-lucide="calendar-check"></i>
+          <span>Gestión de Citas</span>
+        </a>
+        <a href="pages/gestion-agenda.html" class="sidebar__link">
+          <i data-lucide="clock"></i>
+          <span>Gestión de Agenda</span>
+        </a>
+        <a href="#" class="sidebar__link">
+          <i data-lucide="user"></i>
+          <span>Perfil</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="header__top">
+          <div class="header__info">
+            <h2 id="header-title">Panel médico</h2>
+            <p id="header-date"></p>
+          </div>
+          <button class="header__logout" onclick="window.location='../login/login.html'">
+            <i data-lucide="log-out"></i>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card stat-card--blue">
+            <div class="stat-card__icon"><i data-lucide="calendar"></i></div>
+            <div>
+              <div class="stat-card__value" id="stat-hoy">—</div>
+              <div class="stat-card__label">Citas hoy</div>
+            </div>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <div class="stat-card__icon"><i data-lucide="clock"></i></div>
+            <div>
+              <div class="stat-card__value" id="stat-pendientes">—</div>
+              <div class="stat-card__label">Pendientes</div>
+            </div>
+          </div>
+          <div class="stat-card stat-card--green">
+            <div class="stat-card__icon"><i data-lucide="check-circle"></i></div>
+            <div>
+              <div class="stat-card__value" id="stat-confirmadas">—</div>
+              <div class="stat-card__label">Confirmadas (total)</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Vista Inicio -->
+      <div class="medico-content" id="view-inicio">
+        <section class="solicitudes">
+          <h3>Solicitudes pendientes</h3>
+          <div id="solicitudes-list"></div>
+        </section>
+        <aside class="agenda-hoy">
+          <h3>Agenda del día</h3>
+          <div id="agenda-hoy-list"></div>
+        </aside>
+      </div>
+
+      <!-- Vista Gestión de Citas -->
+      <div style="display:none" id="view-citas">
+        <section class="citas-calendario">
+          <div class="citas-cal__header">
+            <h3>Gestión de Citas</h3>
+            <div class="filter-tabs">
+              <button class="filter-tab filter-tab--active" data-filter="todas"    onclick="setFilter('todas')">Todas</button>
+              <button class="filter-tab" data-filter="pendiente"   onclick="setFilter('pendiente')">Pendientes</button>
+              <button class="filter-tab" data-filter="confirmada"  onclick="setFilter('confirmada')">Confirmadas</button>
+              <button class="filter-tab" data-filter="cancelada"   onclick="setFilter('cancelada')">Canceladas</button>
+              <button class="filter-tab" data-filter="rechazada"   onclick="setFilter('rechazada')">Rechazadas</button>
+            </div>
+          </div>
+
+          <div class="citas-cal__body">
+            <div class="citas-cal__left">
+              <div class="citas-cal__nav">
+                <button class="calendar__nav-btn" onclick="prevMesCitas()">
+                  <i data-lucide="chevron-left"></i>
+                </button>
+                <span id="citas-cal-mes" class="citas-cal__mes-label"></span>
+                <button class="calendar__nav-btn" onclick="nextMesCitas()">
+                  <i data-lucide="chevron-right"></i>
+                </button>
+              </div>
+              <div class="citas-cal__grid-labels">
+                <div class="citas-cal__label">Dom</div>
+                <div class="citas-cal__label">Lun</div>
+                <div class="citas-cal__label">Mar</div>
+                <div class="citas-cal__label">Mié</div>
+                <div class="citas-cal__label">Jue</div>
+                <div class="citas-cal__label">Vie</div>
+                <div class="citas-cal__label">Sáb</div>
+              </div>
+              <div class="citas-cal__grid" id="citas-cal-grid"></div>
+            </div>
+
+            <div class="citas-cal__right">
+              <div id="citas-cal-detail">
+                <div class="citas-cal__placeholder">
+                  <i data-lucide="calendar-days"></i>
+                  <span>Selecciona un día para ver sus citas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    const STORAGE_KEY   = 'saludya_citas';
+    const MEDICO_ACTUAL = 'Dra. Paula García';
+    const MESES   = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                     'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const DIAS_ES = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+
+    function getCitas()   { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    function saveCitas(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+
+    function initSeed() {
+      if (getCitas().length > 0) return;
+      saveCitas([
+        { id:'cita_s1', paciente:'Carlos López',   medico:MEDICO_ACTUAL,         especialidad:'Medicina General', fecha:'2026-06-15', hora:'10:30', estado:'confirmada', motivo:'Control general' },
+        { id:'cita_s2', paciente:'Carlos López',   medico:'Dra. María Calderón', especialidad:'Cardiología',      fecha:'2026-06-22', hora:'09:30', estado:'pendiente',  motivo:'Dolor en el pecho' },
+        { id:'cita_s3', paciente:'Carlos López',   medico:MEDICO_ACTUAL,         especialidad:'Dermatología',     fecha:'2026-05-10', hora:'11:00', estado:'cancelada',  motivo:'Revisión de piel' },
+        { id:'cita_s4', paciente:'Ana Rodríguez',  medico:MEDICO_ACTUAL,         especialidad:'Medicina General', fecha:'2026-06-04', hora:'08:30', estado:'pendiente',  motivo:'Fiebre persistente' },
+        { id:'cita_s5', paciente:'Luis Martínez',  medico:MEDICO_ACTUAL,         especialidad:'Medicina General', fecha:'2026-06-04', hora:'09:00', estado:'confirmada', motivo:'Chequeo anual' },
+        { id:'cita_s6', paciente:'Carlos López',   medico:'Dr. Fernando Ruiz',   especialidad:'Neurología',       fecha:'2026-06-10', hora:'14:00', estado:'rechazada',  motivo:'Migraña frecuente' },
+        { id:'cita_s7', paciente:'Sofía Herrera',  medico:MEDICO_ACTUAL,         especialidad:'Medicina General', fecha:'2026-06-04', hora:'10:00', estado:'pendiente',  motivo:'Revisión general' },
+        { id:'cita_s8', paciente:'Pedro Noriega',  medico:MEDICO_ACTUAL,         especialidad:'Medicina General', fecha:'2026-06-15', hora:'11:30', estado:'pendiente',  motivo:'Gripe' },
+        { id:'cita_s9', paciente:'Camila Torres',  medico:MEDICO_ACTUAL,         especialidad:'Dermatología',     fecha:'2026-06-20', hora:'09:00', estado:'confirmada', motivo:'Acné' },
+      ]);
+    }
+
+    const STATUS = {
+      pendiente:  { label:'Pendiente',  cls:'status--pending'   },
+      confirmada: { label:'Confirmada', cls:'status--confirmed' },
+      cancelada:  { label:'Cancelada',  cls:'status--cancelled' },
+      rechazada:  { label:'Rechazada',  cls:'status--rejected'  },
+    };
+    const DOT_CLS = {
+      confirmada: 'cal-dot--confirmed',
+      pendiente:  'cal-dot--pending',
+      cancelada:  'cal-dot--cancelled',
+      rechazada:  'cal-dot--rejected',
+    };
+
+    function badge(estado) {
+      const s = STATUS[estado] || { label: estado, cls: '' };
+      return `<span class="appointment-card__status ${s.cls}">${s.label}</span>`;
+    }
+
+    function esMismoDia(fecha) {
+      const hoy = new Date(); hoy.setHours(0,0,0,0);
+      return new Date(fecha + 'T00:00:00').getTime() === hoy.getTime();
+    }
+
+    function renderStats() {
+      const citas = getCitas().filter(c => c.medico === MEDICO_ACTUAL);
+      document.getElementById('stat-hoy').textContent =
+        citas.filter(c => esMismoDia(c.fecha) && (c.estado === 'confirmada' || c.estado === 'pendiente')).length;
+      document.getElementById('stat-pendientes').textContent =
+        citas.filter(c => c.estado === 'pendiente').length;
+      document.getElementById('stat-confirmadas').textContent =
+        citas.filter(c => c.estado === 'confirmada').length;
+    }
+
+    function renderSolicitudes() {
+      const pendientes = getCitas()
+        .filter(c => c.medico === MEDICO_ACTUAL && c.estado === 'pendiente')
+        .sort((a, b) => a.fecha.localeCompare(b.fecha));
+
+      const el = document.getElementById('solicitudes-list');
+      if (!pendientes.length) {
+        el.innerHTML = '<p class="empty-state">No hay solicitudes pendientes</p>';
+        return;
+      }
+      el.innerHTML = pendientes.map(c => {
+        const d = new Date(c.fecha + 'T00:00:00');
+        const fmtFecha = `${String(d.getDate()).padStart(2,'0')} ${MESES[d.getMonth()].slice(0,3)} · ${c.hora}`;
+        return `
+          <div class="solicitud-card">
+            <div class="solicitud-card__nombre">${c.paciente}</div>
+            <div class="solicitud-card__info">${c.especialidad} · ${fmtFecha}</div>
+            <div class="solicitud-card__motivo">${c.motivo}</div>
+            <div class="solicitud-card__actions">
+              <button class="btn-confirm" onclick="cambiarEstado('${c.id}','confirmada')">
+                <i data-lucide="check"></i> Confirmar
+              </button>
+              <button class="btn-reject" onclick="cambiarEstado('${c.id}','rechazada')">
+                <i data-lucide="x"></i> Rechazar
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderAgendaHoy() {
+      const citasHoy = getCitas()
+        .filter(c => c.medico === MEDICO_ACTUAL && esMismoDia(c.fecha) &&
+                     (c.estado === 'confirmada' || c.estado === 'pendiente'))
+        .sort((a, b) => a.hora.localeCompare(b.hora));
+
+      const el = document.getElementById('agenda-hoy-list');
+      if (!citasHoy.length) {
+        el.innerHTML = '<p class="empty-state">Sin citas para hoy</p>';
+        return;
+      }
+      el.innerHTML = citasHoy.map(c => `
+        <div class="agenda-item">
+          <span class="agenda-item__time">${c.hora}</span>
+          <div>
+            <div class="agenda-item__name">${c.paciente}</div>
+            <div class="agenda-item__esp">${c.especialidad}</div>
+          </div>
+          ${badge(c.estado)}
+        </div>`).join('');
+    }
+
+    let calMes       = new Date().getMonth();
+    let calYear      = new Date().getFullYear();
+    let selectedDay  = null;
+    let filtroActual = 'todas';
+
+    function prevMesCitas() {
+      calMes--; if (calMes < 0) { calMes = 11; calYear--; }
+      renderCitasCalendar();
+    }
+    function nextMesCitas() {
+      calMes++; if (calMes > 11) { calMes = 0; calYear++; }
+      renderCitasCalendar();
+    }
+
+    function renderCitasCalendar() {
+      const todasCitas = getCitas().filter(c => c.medico === MEDICO_ACTUAL);
+      const porDia = {};
+      todasCitas.forEach(c => {
+        const d = new Date(c.fecha + 'T00:00:00');
+        if (d.getFullYear() === calYear && d.getMonth() === calMes) {
+          if (filtroActual === 'todas' || c.estado === filtroActual) {
+            if (!porDia[c.fecha]) porDia[c.fecha] = [];
+            porDia[c.fecha].push(c);
+          }
+        }
+      });
+
+      document.getElementById('citas-cal-mes').textContent = `${MESES[calMes]} ${calYear}`;
+
+      const grid        = document.getElementById('citas-cal-grid');
+      grid.innerHTML    = '';
+      const firstDay    = new Date(calYear, calMes, 1).getDay();
+      const daysInMonth = new Date(calYear, calMes + 1, 0).getDate();
+      const hoy = new Date(); hoy.setHours(0,0,0,0);
+
+      for (let i = 0; i < firstDay; i++) {
+        const el = document.createElement('div');
+        el.className = 'cal-day cal-day--empty';
+        grid.appendChild(el);
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const fecha      = `${calYear}-${String(calMes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const el         = document.createElement('div');
+        const isToday    = new Date(fecha + 'T00:00:00').getTime() === hoy.getTime();
+        const isSelected = fecha === selectedDay;
+
+        let cls = 'cal-day';
+        if (isToday)    cls += ' cal-day--today';
+        if (isSelected) cls += ' cal-day--selected';
+        el.className = cls;
+        el.onclick = () => selectDay(fecha);
+
+        const numEl = document.createElement('span');
+        numEl.className = 'cal-day__num';
+        numEl.textContent = d;
+        el.appendChild(numEl);
+
+        const citasDelDia = porDia[fecha] || [];
+        if (citasDelDia.length) {
+          const dotsEl = document.createElement('div');
+          dotsEl.className = 'cal-day__dots';
+          citasDelDia.slice(0, 3).forEach(c => {
+            const dot = document.createElement('span');
+            dot.className = `cal-dot ${DOT_CLS[c.estado] || ''}`;
+            dotsEl.appendChild(dot);
+          });
+          if (citasDelDia.length > 3) {
+            const more = document.createElement('span');
+            more.className = 'cal-dot__more';
+            more.textContent = `+${citasDelDia.length - 3}`;
+            dotsEl.appendChild(more);
+          }
+          el.appendChild(dotsEl);
+        }
+
+        grid.appendChild(el);
+      }
+      lucide.createIcons();
+    }
+
+    function selectDay(fecha) {
+      selectedDay = fecha;
+      renderCitasCalendar();
+      renderDayDetail(fecha);
+    }
+
+    function renderDayDetail(fecha) {
+      const d = new Date(fecha + 'T00:00:00');
+      const titulo = `${d.getDate()} de ${MESES[d.getMonth()]} ${d.getFullYear()}`;
+
+      let citas = getCitas().filter(c => c.medico === MEDICO_ACTUAL && c.fecha === fecha);
+      if (filtroActual !== 'todas') citas = citas.filter(c => c.estado === filtroActual);
+      citas.sort((a, b) => a.hora.localeCompare(b.hora));
+
+      const el = document.getElementById('citas-cal-detail');
+      if (!citas.length) {
+        el.innerHTML = `
+          <div class="citas-cal__detail-title">${titulo}</div>
+          <p class="empty-state">Sin citas para este día en la categoría seleccionada</p>`;
+        return;
+      }
+
+      el.innerHTML = `
+        <div class="citas-cal__detail-title">
+          ${titulo} · <span style="color:var(--color-text-muted);font-weight:400;">${citas.length} cita${citas.length > 1 ? 's' : ''}</span>
+        </div>
+        ${citas.map(c => `
+          <div class="medico-cita-row">
+            <div>
+              <div class="medico-cita-row__patient">${c.paciente}</div>
+              <div class="medico-cita-row__details">${c.especialidad} · ${c.hora}</div>
+              ${c.motivo ? `<div class="medico-cita-row__motivo">${c.motivo}</div>` : ''}
+            </div>
+            <div class="medico-cita-row__actions">
+              ${badge(c.estado)}
+              ${c.estado === 'pendiente' ? `
+                <div class="medico-cita-row__action-row">
+                  <button class="btn-confirm" style="padding:4px 10px;font-size:11px;"
+                          onclick="cambiarEstado('${c.id}','confirmada')">Confirmar</button>
+                  <button class="btn-reject" style="padding:4px 10px;font-size:11px;"
+                          onclick="cambiarEstado('${c.id}','rechazada')">Rechazar</button>
+                </div>` : ''}
+            </div>
+          </div>`).join('')}`;
+      lucide.createIcons();
+    }
+
+    function setFilter(f) {
+      filtroActual = f;
+      document.querySelectorAll('.filter-tab').forEach(t =>
+        t.classList.toggle('filter-tab--active', t.dataset.filter === f)
+      );
+      renderCitasCalendar();
+      if (selectedDay) renderDayDetail(selectedDay);
+      lucide.createIcons();
+    }
+
+    function cambiarEstado(id, nuevoEstado) {
+      saveCitas(getCitas().map(c => c.id === id ? { ...c, estado: nuevoEstado } : c));
+      renderAll();
+      if (document.getElementById('view-citas').style.display !== 'none') {
+        renderCitasCalendar();
+        if (selectedDay) renderDayDetail(selectedDay);
+        lucide.createIcons();
+      }
+    }
+
+    function showView(view) {
+      document.getElementById('view-inicio').style.display = view === 'inicio' ? '' : 'none';
+      document.getElementById('view-citas').style.display  = view === 'citas'  ? '' : 'none';
+      document.getElementById('nav-inicio').classList.toggle('sidebar__link--active', view === 'inicio');
+      document.getElementById('nav-citas').classList.toggle('sidebar__link--active',  view === 'citas');
+      document.getElementById('header-title').textContent = view === 'inicio' ? 'Panel médico' : 'Gestión de Citas';
+      if (view === 'citas') {
+        renderCitasCalendar();
+        if (!selectedDay) {
+          document.getElementById('citas-cal-detail').innerHTML = `
+            <div class="citas-cal__placeholder">
+              <i data-lucide="calendar-days"></i>
+              <span>Selecciona un día para ver sus citas</span>
+            </div>`;
+        } else {
+          renderDayDetail(selectedDay);
+        }
+        lucide.createIcons();
+      }
+    }
+
+    function setHeaderDate() {
+      const n = new Date();
+      document.getElementById('header-date').textContent =
+        `${DIAS_ES[n.getDay()].charAt(0).toUpperCase() + DIAS_ES[n.getDay()].slice(1)}, ${n.getDate()} de ${MESES[n.getMonth()].toLowerCase()} del ${n.getFullYear()} · Dra. Paula García`;
+    }
+
+    function renderAll() {
+      renderStats();
+      renderSolicitudes();
+      renderAgendaHoy();
+      lucide.createIcons();
+    }
+
+    initSeed();
+    setHeaderDate();
+    renderAll();
+  </script>
+</body>
+</html>
