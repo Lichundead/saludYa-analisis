@@ -27,8 +27,7 @@ jobs:
       - name: Build site
         run: |
           mkdir -p _site
-          cp -r . _site/
-          rm -rf _site/.github _site/.git
+          find . -maxdepth 1 ! -name '.' ! -name '_site' ! -name '.git' ! -name '.github' -exec cp -r {} _site/ \;
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
