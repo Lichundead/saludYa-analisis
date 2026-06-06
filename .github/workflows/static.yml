@@ -26,9 +26,10 @@ jobs:
 
       - name: Build site
         run: |
-          mkdir -p _site/jsdoc
-          cp index.html _site/index.html
-          
+          mkdir -p _site
+          cp -r . _site/
+          rm -rf _site/.github _site/.git
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
