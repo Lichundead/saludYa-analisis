@@ -216,8 +216,8 @@
 
 .citas-cal__body {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
+  grid-template-columns: 420px 1fr;
+  gap: 28px;
   align-items: start;
 }
 
@@ -226,33 +226,56 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .citas-cal__mes-label {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
+}
+
+.calendar__nav-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+}
+.calendar__nav-btn:hover {
+  background: #f3f4f6;
+  color: var(--color-text);
+}
+.calendar__nav-btn i {
+  width: 15px;
+  height: 15px;
 }
 
 /* Etiquetas de día */
 .citas-cal__grid-labels {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  margin-bottom: 4px;
+  gap: 4px;
+  margin-bottom: 6px;
 }
 .citas-cal__label {
   text-align: center;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--color-text-muted);
   font-weight: 500;
-  padding: 2px 0;
+  padding: 4px 0;
 }
 
 /* Grid de días */
 .citas-cal__grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 3px;
+  gap: 5px;
 }
 
 .cal-day {
@@ -261,14 +284,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 4px;
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
   transition:
     background 0.12s,
     border-color 0.12s;
-  padding: 3px 2px;
+  padding: 4px 2px;
 }
 .cal-day:hover:not(.cal-day--empty) {
   background: #f3f4f6;
@@ -292,7 +315,7 @@
 }
 
 .cal-day__num {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1;
 }
@@ -305,8 +328,8 @@
   justify-content: center;
 }
 .cal-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -337,7 +360,7 @@
 .citas-cal__right {
   border-left: 1px solid var(--color-border);
   padding-left: 24px;
-  min-height: 320px;
+  min-height: 400px;
 }
 
 .citas-cal__detail-title {
@@ -354,14 +377,14 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  height: 240px;
+  height: 320px;
   color: var(--color-text-muted);
   font-size: 13px;
   text-align: center;
 }
 .citas-cal__placeholder i {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   opacity: 0.35;
 }
 
